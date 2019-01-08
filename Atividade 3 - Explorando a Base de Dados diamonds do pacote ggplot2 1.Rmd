@@ -1,0 +1,203 @@
+---
+title: "Atividade 3 - Explorando a Base de Dados diamonds do pacote ggplot2"
+author: "Joao Bispo"
+date: "07/01/2019"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#####Instituto Presbiteriano Makenzie
+#####Curso de Ciência de Dados - Big Data Analytics
+
+
+*Diamonds* é uma base de dados que contém os preços e outros atributos de quase 54.000 diamantes. De fato, são 53940 linhas e 10 variáveis, mostradas a seguir:
+
+Variável |  Descrição 
+---------| --------------------------
+price    | preçoo em dólares americanos  ($326--$18,823)
+carat    | peso do diamente (0.2--5.01)
+cut      |  qualidade do corte (Fair, Good, Very Good, Premium, Ideal)
+color    | cor do diamante, indo de J (pior) a D (melhor)
+clarity  | medida de quão claro é o diamante (I1 (pior), SI2, SI1, VS2, VS1, VVS2, VVS1, IF (melhor))
+x        | comprimento em mm (0--10.74)
+y        | largura em mm (0--58.9)
+z        | profundidade em mm (0--31.8)
+depth    | percentual de profundidade total  = z / mean(x, y) = 2 * z / (x + y) (43--79)
+table    | largura do topo do diamante relativo ao ponto mais largo (43--95)
+
+#### A leitura dos dados pode ser feita com o comando abaixo:
+
+caso não tenha, instale a biblioteca ggplot2
+
+install.packages("tidyverse")
+
+install.packages("ggplot2")
+
+library(tidyverse)
+
+Após carregar a base de dados no R, vamos a algumas explorções:
+
+<br>1 - Qual é a estrutura do conjunto de dados de diamantes? </br>
+2 - Explore a parte inicial e a final do conjunto de dados.</br>
+3 - Faça alguns sumários estatatísticos para entender melhor a base de dados.</br>
+4 - A saída da função summary() está de acordo com a descriçãoo mostrada anteriormente?</br>
+5 - Explore a variável price, seguindo o modelo de explorações</br>
+6 - Veja a distribuição da variável (histograma); observe a faixa de valores da variável e também.</br>
+7 - Explore também as variáveis carat, cut, color, clarity, x, y, z, depth e table, seguindo o modelo de exploração.</br>
+8 - Crie boxplots para as variáveis numéricas; veja se existem dados anormais (outliers).</br>
+9 - Utilize as variáveis categóricas para fazer o facetamento dos dados, mostrando alguns gráficos com 2 ou mais variáveis contínuas lado a lado.
+Para cada resultado/gráfico obtido, explique e discuta-os, de modo a construir um relatório de exploração dos dados, que deverá ser submetido.
+
+####Resposta item 1
+
+```{r}
+library(ggplot2)
+str(diamonds)
+```
+
+####Resposta item 2 Parte Inicial
+
+```{r}
+head(diamonds)
+```
+
+####Resposta item 2 Parte Final
+
+```{r}
+tail(diamonds)
+```
+
+
+####Resposta 3 
+
+```{r}
+library(ggplot2)
+summary(diamonds)
+```
+
+####Resposta 4
+
+Não é possível comparar os valores do resultado do STR e do Summary, pois o STR não demonstra os valores detalhados e organizados, é possivel comparar com o dicinário de dados e apontar que os valores obtidos com o Summary não correspondem com os iformados no Dicionário de Dados
+
+####Resposta 5
+
+```{r}
+library(ggplot2)
+fivenum(diamonds$price)
+```
+Os valores apresentados pelo comando fivenum representam:
+valor Mínimo
+1º Quartil
+Mediana
+3º Quartil 
+Valor Máximo
+
+```{r}
+library(ggplot2)
+IQR(diamonds$price)
+```
+
+O comando IQR representa a difereça entre o 1º e o 3º Quartil
+Ao chamar o comando boxplot ele apresenta valores valores acima do valor máximo(podemos visualizar na barra preta em negrito vertical), mas teremos que explorar melhor as base para verificar se realmente representam outliers.
+
+
+```{r}
+library(ggplot2)
+boxplot(diamonds$price,col="orange")
+```
+
+Os valores apresentados (barra em negrito vertical) estão fora do limite máximo aceitável, vamos explorar de outras formas para confirmar os outliers.
+
+####Resposta 6
+
+```{r}
+library(ggplot2)
+ggplot(diamonds,aes(x=price)) + geom_histogram()
+```
+
+Pode-se notar que há um pico de valores em relação à maioria dos dados, o que demonstra que a maioria dos diamantes tem um preço abaixo do valor da mediana.
+
+####Resposta 7
+
+Exploração da Variável carat(peso) em relação ao eixo X e Y.
+
+```{r}
+library(ggplot2)
+ggplot(diamonds, aes(x=carat, y=x)) + geom_boxplot() + scale_y_continuous()
+ggplot(diamonds, aes(x=carat, y=y)) + geom_boxplot() + scale_y_continuous()
+ggplot(diamonds, aes(x=carat, y=z)) + geom_boxplot() + scale_y_continuous()
+```
+
+Exploração da Variável cut(corte) em relação ao eixo X e Y
+
+```{r}
+library(ggplot2)
+ggplot(diamonds, aes(x=cut, y=x)) + geom_boxplot() + scale_y_continuous()
+ggplot(diamonds, aes(x=cut, y=y)) + geom_boxplot() + scale_y_continuous()
+ggplot(diamonds, aes(x=cut, y=z)) + geom_boxplot() + scale_y_continuous()
+```
+
+Exploração da Variável Color(cor) em relação ao eixo X e Y.
+
+```{r}
+library(ggplot2)
+ggplot(diamonds, aes(x=color, y=x)) + geom_boxplot() + scale_y_continuous()
+ggplot(diamonds, aes(x=color, y=y)) + geom_boxplot() + scale_y_continuous()
+ggplot(diamonds, aes(x=color, y=z)) + geom_boxplot() + scale_y_continuous()
+```
+
+Exploração da Variável clarity(claridade) em relação ao eixo X e Y.
+
+```{r}
+library(ggplot2)
+ggplot(diamonds, aes(x=clarity, y=x)) + geom_boxplot() + scale_y_continuous()
+ggplot(diamonds, aes(x=clarity, y=y)) + geom_boxplot() + scale_y_continuous()
+ggplot(diamonds, aes(x=clarity, y=z)) + geom_boxplot() + scale_y_continuous()
+```
+
+
+Exploração da variável cor e preço
+
+```{r}
+library(ggplot2)
+ggplot(diamonds, aes(x=color, y=price)) + geom_boxplot() + scale_y_continuous()
+```
+
+Percebe-se que a variação maior aparce comparando as variáveis color e price, portando a variável color é a que mais impacta nos outliers.
+
+####Resposta 8
+
+
+```{r}
+library(ggplot2)
+boxplot(diamonds$x,col="orange")
+```
+
+
+```{r}
+library(ggplot2)
+boxplot(diamonds$y,col="orange")
+```
+
+
+```{r}
+library(ggplot2)
+boxplot(diamonds$z,col="orange")
+```
+
+Percebe-se que a variável x(comprimento) influencia muito nos valores, devido seu gráfico demosntrar valores fora do aceitável
+
+####Resposta 9
+
+
+```{r}
+library(ggplot2)
+ggplot(diamonds, aes(x=carat, y=price, color=cut)) + geom_point() + facet_wrap(~ clarity)
+```
+
+Pode-se perceber que há uma concentração de cut (very good, premmium e ideal) nos valores mais altos.
